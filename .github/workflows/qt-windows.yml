@@ -30,9 +30,9 @@ jobs:
     - name: qmake
       run: qmake .
     - name: make
-      run: make
+      run: nmake
     - name: make check
-      run: make check
+      run: nmake check
 
     - name: List files
       run: ls -la
