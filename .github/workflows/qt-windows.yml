@@ -20,7 +20,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2017_64'
-        modules: 'gui core serialport network opengl xml'
+        install-deps: true
     - name: qmake
       run: qmake .
     - name: make
