@@ -30,9 +30,9 @@ jobs:
     - name: Install GStreamer
       run: |
         choco install gstreamer gstreamer-devel -y
-        echo "GSTREAMER_1_0_ROOT_MSVC_X86_64=C:\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
+        echo "GSTREAMER_1_0_ROOT_MSVC_X86_64=C:\Program\ Files\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
     - name: qmake
-      run: qmake . -spec win32-msvc "GSTREAMER_1_0_ROOT_X86=C:\gstreamer\1.0\msvc_x86_64"
+      run: qmake . -spec win32-msvc "GSTREAMER_1_0_ROOT_X86=C:\Program\ Files\gstreamer\1.0\msvc_x86_64\"
     - name: make
       run: nmake
     - name: make check
