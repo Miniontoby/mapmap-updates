@@ -3,9 +3,9 @@ name: Build on Ubuntu
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ dev, master ]
   pull_request:
-    branches: [ develop, master ]
+    branches: [ dev, master ]
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install system dependencies
       run: |
@@ -52,3 +52,6 @@ jobs:
 
     - name: Run tests
       run: make check || true
+
+    - name: List files
+      run: ls -la
