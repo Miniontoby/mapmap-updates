@@ -3,25 +3,23 @@ name: Build on Windows
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ dev, feature/action-release-builds ]
   pull_request:
-    branches: [ develop ]
+    branches: [ dev ]
 
 jobs:
   build:
-    if: false # Disable for now
-
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v4
       with:
         version: '5.12.12'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2017_64'
+        arch: 'win64_msvc2022_64'
         modules: 'gui core serialport network opengl xml'
     - name: qmake
       run: qmake .
@@ -29,6 +27,14 @@ jobs:
       run: make
     - name: make check
       run: make check
+
+    - name: List files
+      run: ls -la
+
+    - uses: actions/upload-artifact@v4
+      with:
+        path: dist
+
 
 #    - name: make distcheck
 #      run: make distcheck
