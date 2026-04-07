@@ -3,9 +3,9 @@ name: Build on Ubuntu (old)
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ dev ]
   pull_request:
-    branches: [ develop ]
+    branches: [ dev ]
 
 jobs:
   build:
@@ -14,14 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
+        cache: true
         version: '5.12.12'
         host: 'linux'
         target: 'desktop'
-        modules: 'gui core serialport network opengl xml'
+        install-deps: true
     - name: qmake
       run: qmake .
     - name: make
