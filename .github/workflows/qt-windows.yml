@@ -27,8 +27,12 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
+    - name: Install GStreamer
+      run: |
+        choco install gstreamer gstreamer-devel -y
+        echo "GSTREAMER_1_0_ROOT_MSVC_X86_64=C:\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
     - name: qmake
-      run: qmake .
+      run: qmake . -spec win32-msvc "GSTREAMER_1_0_ROOT_X86=C:\gstreamer\1.0\msvc_x86_64"
     - name: make
       run: nmake
     - name: make check
@@ -37,7 +41,7 @@ jobs:
     - name: List files
       run: ls -la
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v7
       with:
         path: mapmap*
 
