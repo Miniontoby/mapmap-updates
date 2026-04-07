@@ -9,6 +9,7 @@ VERSION = 0.6.3
 TARGET = mapmap
 
 DEFINES += UNICODE QT_THREAD_SUPPORT QT_CORE_LIB QT_GUI_LIB QT_MESSAGELOGCONTEXT
+win32: DEFINES += NOMINMAX WIN32_LEAN_AND_MEAN
 
 include(src/core/core.pri)
 include(src/shape/shape.pri)
