@@ -1,5 +1,5 @@
 # Build a Qt project on Ubuntu
-name: Build on Ubuntu (old)
+name: Build on Ubuntu
 
 on:
   push:
@@ -13,6 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -28,7 +29,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           liblo-dev liblo-tools \
-          qtwebengine5-dev \
           libgstreamer1.0-dev \
           libgstreamer-plugins-base1.0-dev \
           gstreamer1.0-plugins-bad \
@@ -43,8 +43,10 @@ jobs:
 
     - name: qmake
       run: qmake .
+
     - name: make
-      run: make
+      run: make -j$(nproc)
+
     - name: make check
       run: make check
 
