@@ -53,5 +53,7 @@ jobs:
     - name: Run tests
       run: make check || true
 
-    - name: List files
-      run: ls -la
+    - uses: actions/upload-artifact@v4
+      with:
+        name: linux-build
+        path: mapmap
