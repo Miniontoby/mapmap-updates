@@ -21,6 +21,10 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2017_64'
         install-deps: true
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
     - name: qmake
       run: qmake .
     - name: make
