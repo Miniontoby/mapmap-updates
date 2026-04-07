@@ -16,11 +16,13 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
+        cache: true
         version: '5.12.12'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2017_64'
         install-deps: true
+        modules: 'qtwebengine'
     - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
       with:
