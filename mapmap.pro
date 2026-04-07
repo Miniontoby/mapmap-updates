@@ -57,6 +57,13 @@ unix:!macx {
     QMAKE_CXXFLAGS += -D_GLIBCXX_USE_CXX11_ABI=0
     QMAKE_CXXFLAGS += -Wno-expansion-to-defined
 }
+win32 {
+    GSTREAMER_ROOT = $$(GSTREAMER_1_0_ROOT_MSVC_X86_64)
+    INCLUDEPATH += $$GSTREAMER_ROOT/include/gstreamer-1.0
+    INCLUDEPATH += $$GSTREAMER_ROOT/include/glib-2.0
+    INCLUDEPATH += $$GSTREAMER_ROOT/lib/glib-2.0/include
+    LIBS += -L$$GSTREAMER_ROOT/lib -lgstreamer-1.0 -lglib-2.0 -lgobject-2.0
+}
 
 CONFIG -= qtquickcompiler
 
