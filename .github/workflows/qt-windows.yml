@@ -33,7 +33,7 @@ jobs:
 
     - name: Cache GStreamer
       id: cache-gstreamer
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v5
       with:
         path: C:\Program Files\gstreamer
         key: gstreamer-1.0-msvc-x86_64
@@ -46,8 +46,8 @@ jobs:
     - name: qmake
       run: qmake . -spec win32-msvc
 
-    - name: List GStreamer libs
-      run: ls "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib"
+    - name: Find GStreamer libs
+      run: Get-ChildItem -Path "C:\Program Files\gstreamer" -Filter "gstreamer*.lib" -Recurse
       
     - name: make
       run: nmake
