@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache-brew.outputs.cache-hit != 'true'
       run: |
-        brew install pkg-config orc \
+        arch -x86_64 brew install pkg-config orc \
           gstreamer \
           gst-plugins-base \
           gst-plugins-good \
