@@ -27,6 +27,7 @@ jobs:
           /opt/homebrew/Cellar/gst-plugins-bad
           /opt/homebrew/Cellar/gst-plugins-ugly
           /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc
         key: brew-gstreamer-${{ runner.os }}-v1
 
     - name: Install Qt
@@ -42,7 +43,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache-brew.outputs.cache-hit != 'true'
       run: |
-        brew install pkg-config \
+        brew install pkg-config orc \
           gstreamer \
           gst-plugins-base \
           gst-plugins-good \
@@ -90,3 +91,4 @@ jobs:
           /opt/homebrew/Cellar/gst-plugins-bad
           /opt/homebrew/Cellar/gst-plugins-ugly
           /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc
