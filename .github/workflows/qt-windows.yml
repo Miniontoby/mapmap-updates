@@ -13,6 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -23,6 +24,7 @@ jobs:
         arch: 'win64_msvc2017_64'
         install-deps: true
         modules: 'qtwebengine'
+
     - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
       with:
@@ -35,6 +37,7 @@ jobs:
       with:
         path: C:\Program Files\gstreamer
         key: gstreamer-1.0-msvc-x86_64
+        save-always: true
     - name: Install GStreamer
       if: steps.cache-gstreamer.outputs.cache-hit != 'true'
       run: choco install gstreamer gstreamer-devel -y
@@ -43,8 +46,10 @@ jobs:
 
     - name: qmake
       run: qmake . -spec win32-msvc
+
     - name: make
       run: nmake
+
     - name: make check
       run: nmake check
 
@@ -53,6 +58,7 @@ jobs:
 
     - uses: actions/upload-artifact@v7
       with:
+        name: windows-build
         path: mapmap*
 
 
