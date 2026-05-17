@@ -52,11 +52,8 @@ jobs:
     - name: make check
       run: nmake check
 
-    - name: Find exe
-      run: Get-ChildItem -Path "D:\a\mapmap-updates" -Filter "*.exe" -Recurse
-
     - name: Deploy Qt
-      run: windeployqt --release "MapMap\MapMap.exe"
+      run: windeployqt --release "D:\a\mapmap-updates\MapMap\MapMap.exe"
 
     - name: Copy GStreamer DLLs
       run: |
