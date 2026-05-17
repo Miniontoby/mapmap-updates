@@ -10,8 +10,6 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    env:
-      CXXFLAGS: -Wno-deprecated-copy
 
     steps:
     - uses: actions/checkout@v6
@@ -63,7 +61,7 @@ jobs:
       run: qmake .
 
     - name: make
-      run: make -j"$(sysctl -n hw.logicalcpu)"
+      run: CXXFLAGS="-Wno-deprecated-copy -Wno-error=deprecated-copy" make -j"$(sysctl -n hw.logicalcpu)"
 
     - name: make check
       run: make check
@@ -71,7 +69,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: macos-build
-        path: mapmap
+        path: MapMap
 
 #    - name: make distcheck
 #      run: make distcheck
