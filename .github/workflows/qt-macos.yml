@@ -9,24 +9,100 @@ on:
 
 jobs:
   build:
-    if: false # Disable for now
-
+    if: false # ARM64 cannot build QT5 apps
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    - name: Cache Homebrew
+      id: cache-brew
+      uses: actions/cache/restore@v5
+      with:
+        path: |
+          ~/Library/Caches/Homebrew
+          /opt/homebrew/Cellar/pkg-config
+          /opt/homebrew/Cellar/gstreamer
+          /opt/homebrew/Cellar/gst-plugins-base
+          /opt/homebrew/Cellar/gst-plugins-good
+          /opt/homebrew/Cellar/gst-plugins-bad
+          /opt/homebrew/Cellar/gst-plugins-ugly
+          /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc
+        key: brew-gstreamer-${{ runner.os }}-v1
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
+        cache: true
         version: '5.12.12'
+        host: 'mac'
         target: 'desktop'
-        modules: 'gui core serialport network opengl xml'
+        install-deps: true
+        modules: 'qtwebengine'
+
+    - name: Install dependencies
+      if: steps.cache-brew.outputs.cache-hit != 'true'
+      run: |
+        brew install pkg-config orc \
+          gstreamer \
+          gst-plugins-base \
+          gst-plugins-good \
+          gst-plugins-bad \
+          gst-plugins-ugly \
+          gst-libav
+
+    - name: Set environment
+      run: |
+        GST_PC=$(find /opt/homebrew/Cellar/gstreamer -name '*.pc' | head -1 | xargs dirname)
+        ORC_PC=$(find /opt/homebrew/Cellar/orc -name '*.pc' 2>/dev/null | head -1 | xargs dirname)
+        echo "PKG_CONFIG_PATH=${GST_PC}:${ORC_PC}:${PKG_CONFIG_PATH:-}" >> $GITHUB_ENV
+
+    - name: Fake GStreamer framework
+      run: |
+        GST_CELLAR=$(find /opt/homebrew/Cellar/gstreamer -maxdepth 1 -mindepth 1 -type d | head -1)
+        sudo mkdir -p "/Library/Frameworks/GStreamer.framework/Versions/1.0"
+        sudo ln -sf "${GST_CELLAR}/lib/libgstreamer-1.0.dylib" "/Library/Frameworks/GStreamer.framework/GStreamer"
+        sudo ln -sf "${GST_CELLAR}/lib/libgstreamer-1.0.dylib" "/Library/Frameworks/GStreamer.framework/Versions/1.0/GStreamer"
+        sudo mkdir -p "/Library/Frameworks/GStreamer.framework/Versions/1.0/Headers"
+        sudo ln -sf "${GST_CELLAR}/include/gstreamer-1.0/gst" "/Library/Frameworks/GStreamer.framework/Versions/1.0/Headers/gst"
+
     - name: qmake
-      run: qmake .
+      run: |
+        GST_FLAGS=$(pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
+        GST_LIBS=$(pkg-config --libs gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
+        qmake . \
+          "QMAKE_CXXFLAGS+=${GST_FLAGS}" \
+          "QMAKE_LFLAGS+=${GST_LIBS}" \
+          "LIBS-=-F /Library/Frameworks/ -framework GStreamer" \
+          "LIBS-=-framework OpenGL -framework GLUT"
+
     - name: make
-      run: make
+      run: make -j$(sysctl -n hw.logicalcpu)
+
     - name: make check
       run: make check
 
+    - uses: actions/upload-artifact@v4
+      with:
+        name: macos-build
+        path: MapMap
+
 #    - name: make distcheck
 #      run: make distcheck
+
+    - name: Always cache brew
+      if: always() && steps.cache-brew.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.cache-brew.outputs.cache-primary-key }}
+        path: |
+          ~/Library/Caches/Homebrew
+          /opt/homebrew/Cellar/pkg-config
+          /opt/homebrew/Cellar/gstreamer
+          /opt/homebrew/Cellar/gst-plugins-base
+          /opt/homebrew/Cellar/gst-plugins-good
+          /opt/homebrew/Cellar/gst-plugins-bad
+          /opt/homebrew/Cellar/gst-plugins-ugly
+          /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc
