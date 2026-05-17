@@ -53,7 +53,7 @@ jobs:
       run: nmake check
 
     - name: Deploy Qt
-      run: windeployqt --release "MapMap\MapMap.exe"
+      run: windeployqt --release --no-system-d3d-compiler "MapMap\MapMap.exe"
 
     - name: Copy GStreamer DLLs
       run: |
