@@ -52,22 +52,16 @@ jobs:
     - name: make check
       run: nmake check
 
-    - name: Find exe
-      run: Get-ChildItem -Path "D:\a\mapmap-updates\" -Filter "MapMap.exe" -Recurse
-
     - name: Deploy Qt
-      if: false
       run: windeployqt --release MapMap/MapMap.exe
 
     - name: Copy GStreamer DLLs
-      if: false
       run: |
         Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\bin\*.dll" -Destination "MapMap\" -Force
         New-Item -ItemType Directory -Force -Path "MapMap\plugins"
         Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib\gstreamer-1.0\*.dll" -Destination "MapMap\plugins\" -Force
 
     - uses: actions/upload-artifact@v4
-      if: false
       with:
         name: MapMap
         path: MapMap/
