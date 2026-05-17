@@ -46,22 +46,16 @@ jobs:
     - name: qmake
       run: qmake . -spec win32-msvc
 
-    - name: Find GStreamer libs
-      run: Get-ChildItem -Path "C:\Program Files\gstreamer" -Filter "gstreamer*.lib" -Recurse
-      
     - name: make
       run: nmake
 
     - name: make check
       run: nmake check
 
-    - name: List files
-      run: ls -la
-
     - uses: actions/upload-artifact@v7
       with:
         name: windows-build
-        path: mapmap*        
+        path: mapmap*
 
 #    - name: make distcheck
 #      run: make distcheck
