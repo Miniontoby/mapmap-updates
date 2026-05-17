@@ -39,7 +39,7 @@ jobs:
       if: steps.cache-gstreamer.outputs.cache-hit != 'true'
       run: choco install gstreamer gstreamer-devel -y
     - name: Set GStreamer env
-      run: echo "GSTREAMER_1_0_ROOT_MSVC_X86_64=C:\Program Files\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
+      run: echo "GSTREAMER_1_0_ROOT_X86=C:\Program Files\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
 
     - name: qmake
       run: qmake . -spec win32-msvc
