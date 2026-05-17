@@ -59,13 +59,12 @@ jobs:
 
     - name: Find gst.h
       run: find /opt/homebrew -name "gst.h" 2>/dev/null
-      
+
     - name: qmake
       run: |
-        GST_INCLUDE="$(brew --prefix gstreamer)/include/gstreamer-1.0"
-        GLIB_INCLUDE="$(brew --prefix glib)/include/glib-2.0"
-        GLIB_CONFIG="$(brew --prefix glib)/lib/glib-2.0/include"
-        qmake . "INCLUDEPATH+=${GST_INCLUDE} ${GLIB_INCLUDE} ${GLIB_CONFIG}"
+        GST_FLAGS=$(pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
+        GST_LIBS=$(pkg-config --libs gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
+        qmake . "QMAKE_CXXFLAGS+=${GST_FLAGS}" "QMAKE_LFLAGS+=${GST_LIBS}"
 
     - name: make
       run: make -j1
