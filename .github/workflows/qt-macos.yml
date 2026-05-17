@@ -57,6 +57,13 @@ jobs:
         ORC_PC=$(find /opt/homebrew/Cellar/orc -name '*.pc' 2>/dev/null | head -1 | xargs dirname)
         echo "PKG_CONFIG_PATH=${GST_PC}:${ORC_PC}:${PKG_CONFIG_PATH:-}" >> $GITHUB_ENV
 
+    - name: Fake GStreamer framework
+      run: |
+        sudo mkdir -p "/Library/Frameworks/GStreamer.framework/Versions/1.0/Headers"
+        GST_CELLAR=$(find /opt/homebrew/Cellar/gstreamer -maxdepth 1 -mindepth 1 -type d | head -1)
+        sudo ln -sf "${GST_CELLAR}/lib" "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib"
+        sudo ln -sf "${GST_CELLAR}/include/gstreamer-1.0/gst" "/Library/Frameworks/GStreamer.framework/Versions/1.0/Headers/gst"
+
     - name: qmake
       run: |
         GST_FLAGS=$(pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
@@ -68,7 +75,7 @@ jobs:
           "LIBS-=-framework OpenGL -framework GLUT"
 
     - name: make
-      run: make -j1
+      run: make -j$(sysctl -n hw.logicalcpu)
 
     - name: make check
       run: make check
