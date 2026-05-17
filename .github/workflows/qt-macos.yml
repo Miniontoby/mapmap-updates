@@ -31,7 +31,8 @@ jobs:
     - name: Install QT
       run: |
         brew install qt@5
-        echo "QT5_PREFIX="$(brew --prefix qt@5)"" >> $env:GITHUB_ENV
+        QT5_PREFIX="$(brew --prefix qt@5)"
+        echo "QT5_PREFIX="${QT5_PREFIX}"" >> $env:GITHUB_ENV
         echo "PATH="${QT5_PREFIX}/bin:${PATH}"" >> $env:GITHUB_ENV
         echo "Qt 5 prefix: ${QT5_PREFIX}"
         echo "qmake: $(command -v qmake)"
@@ -49,8 +50,10 @@ jobs:
 
     - name: expose gstreamer
       run: |
-        echo "GST_PREFIX="$(brew --prefix gstreamer)"" >> $env:GITHUB_ENV
-        echo "PKG_CONFIG_PATH="${GST_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"" >> $env:GITHUB_ENV
+        GST_PREFIX="$(brew --prefix gstreamer)"
+        echo "GST_PREFIX="${GST_PREFIX}"" >> $env:GITHUB_ENV
+        PKG_CONFIG_PATH="${GST_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+        echo "PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"" >> $env:GITHUB_ENV
         echo "GStreamer prefix: ${GST_PREFIX}"
         echo "GStreamer version: $(pkg-config --modversion gstreamer-1.0)"
 
@@ -62,6 +65,11 @@ jobs:
 
     - name: make check
       run: make check
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: macos-build
+        path: mapmap
 
 #    - name: make distcheck
 #      run: make distcheck
