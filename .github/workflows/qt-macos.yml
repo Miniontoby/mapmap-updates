@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: false # ARM64 cannot build QT5 apps
     runs-on: macos-latest
 
     steps:
@@ -43,7 +44,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache-brew.outputs.cache-hit != 'true'
       run: |
-        arch -x86_64 brew install pkg-config orc \
+        brew install pkg-config orc \
           gstreamer \
           gst-plugins-base \
           gst-plugins-good \
