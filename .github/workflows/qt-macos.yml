@@ -61,7 +61,11 @@ jobs:
       run: |
         GST_FLAGS=$(pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
         GST_LIBS=$(pkg-config --libs gstreamer-1.0 gstreamer-app-1.0 gstreamer-pbutils-1.0)
-        qmake . "QMAKE_CXXFLAGS+=${GST_FLAGS}" "QMAKE_LFLAGS+=${GST_LIBS}"
+        qmake . \
+          "QMAKE_CXXFLAGS+=${GST_FLAGS}" \
+          "QMAKE_LFLAGS+=${GST_LIBS}" \
+          "LIBS-=-F /Library/Frameworks/ -framework GStreamer" \
+          "LIBS-=-framework OpenGL -framework GLUT"
 
     - name: make
       run: make -j1
