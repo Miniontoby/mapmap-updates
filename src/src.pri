@@ -51,7 +51,7 @@ macx {
 # Windows-specific:
 win32 {
   DEFINES += WIN32
-  TARGET = ../../../MapMap/MapMap # Just for release
+  TARGET = ../../MapMap/MapMap # Just for release
   GST_HOME = $$quote($$(GSTREAMER_1_0_ROOT_X86))
   isEmpty(GST_HOME) {
     message(\"GSTREAMER_1_0_ROOT_X86\" not detected ...)
