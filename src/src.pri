@@ -51,7 +51,7 @@ macx {
 # Windows-specific:
 win32 {
   DEFINES += WIN32
-  TARGET = ../../../MapMap/MapMap # Just for release
+  TARGET = ../MapMap/MapMap # Just for release
   GST_HOME = $$quote($$(GSTREAMER_1_0_ROOT_X86))
   isEmpty(GST_HOME) {
     message(\"GSTREAMER_1_0_ROOT_X86\" not detected ...)
@@ -65,14 +65,15 @@ win32 {
     $${GST_HOME}/lib/glib-2.0/include \
     $${GST_HOME}/include/gstreamer-1.0
 
-  LIBS += $${GST_HOME}/lib/gstapp-1.0.lib \
-    $${GST_HOME}/lib/gstbase-1.0.lib \
-    $${GST_HOME}/lib/gstpbutils-1.0.lib \
-    $${GST_HOME}/lib/gstreamer-1.0.lib \
-    $${GST_HOME}/lib/gobject-2.0.lib \
-    $${GST_HOME}/lib/glib-2.0.lib \
-    $${GST_HOME}/lib/gstaudio-1.0.lib \
-    $${GST_HOME}/lib/gstvideo-1.0.lib \
+  LIBS += -L"$${GST_HOME}/lib" \
+    -lgstapp-1.0 \
+    -lgstbase-1.0 \
+    -lgstpbutils-1.0 \
+    -lgstreamer-1.0 \
+    -lgobject-2.0 \
+    -lglib-2.0 \
+    -lgstaudio-1.0 \
+    -lgstvideo-1.0 \
     -lopengl32
 
   CONFIG -= debug

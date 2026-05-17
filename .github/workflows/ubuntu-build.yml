@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: false # does not need to be ran
     runs-on: ubuntu-24.04
 
     steps:

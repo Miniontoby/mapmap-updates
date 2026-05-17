@@ -9,6 +9,7 @@ VERSION = 0.6.3
 TARGET = mapmap
 
 DEFINES += UNICODE QT_THREAD_SUPPORT QT_CORE_LIB QT_GUI_LIB QT_MESSAGELOGCONTEXT
+win32: DEFINES += NOMINMAX WIN32_LEAN_AND_MEAN QOSC_LIBRARY
 
 include(src/core/core.pri)
 include(src/shape/shape.pri)
@@ -55,6 +56,14 @@ system($$QMAKE_LRELEASE mapmap.pro) # Run lrelease
 unix:!macx {
     QMAKE_CXXFLAGS += -D_GLIBCXX_USE_CXX11_ABI=0
     QMAKE_CXXFLAGS += -Wno-expansion-to-defined
+}
+win32 {
+    GSTREAMER_ROOT = $$(GSTREAMER_1_0_ROOT_MSVC_X86_64)
+    INCLUDEPATH += $$GSTREAMER_ROOT/include/gstreamer-1.0
+    INCLUDEPATH += $$GSTREAMER_ROOT/include/glib-2.0
+    INCLUDEPATH += $$GSTREAMER_ROOT/lib/glib-2.0/include
+    LIBS += -L$$GSTREAMER_ROOT/lib -lgstreamer-1.0 -lglib-2.0 -lgobject-2.0
+    QMAKE_CXXFLAGS += /FI"windows.h"
 }
 
 CONFIG -= qtquickcompiler

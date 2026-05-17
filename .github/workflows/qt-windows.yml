@@ -13,28 +13,65 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
+        cache: true
         version: '5.12.12'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2022_64'
-        #modules: 'gui core serialport network opengl xml'
-    - name: qmake
-      run: qmake .
-    - name: make
-      run: make
-    - name: make check
-      run: make check
+        arch: 'win64_msvc2017_64'
+        install-deps: true
+        modules: 'qtwebengine'
 
-    - name: List files
-      run: ls -la
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        sdk: 10.0.22621.0
+
+    - name: Cache GStreamer
+      id: cache-gstreamer
+      uses: actions/cache/restore@v5
+      with:
+        path: C:\Program Files\gstreamer
+        key: gstreamer-1.0-msvc-x86_64
+    - name: Install GStreamer
+      if: steps.cache-gstreamer.outputs.cache-hit != 'true'
+      run: choco install gstreamer gstreamer-devel -y
+    - name: Set GStreamer env
+      run: echo "GSTREAMER_1_0_ROOT_X86=C:\Program Files\gstreamer\1.0\msvc_x86_64" >> $env:GITHUB_ENV
+
+    - name: qmake
+      run: qmake . -spec win32-msvc
+
+    - name: make
+      run: nmake
+
+    - name: make check
+      run: nmake check
+
+    - name: Deploy Qt
+      run: windeployqt --release --no-system-d3d-compiler "MapMap\MapMap.exe"
+
+    - name: Copy GStreamer DLLs
+      run: |
+        Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\bin\*.dll" -Destination "MapMap\" -Force
+        New-Item -ItemType Directory -Force -Path "MapMap\plugins"
+        Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib\gstreamer-1.0\*.dll" -Destination "MapMap\plugins\" -Force
 
     - uses: actions/upload-artifact@v4
       with:
-        path: mapmap*
-
+        name: windows-build
+        path: MapMap/
 
 #    - name: make distcheck
 #      run: make distcheck
+
+    - name: Always cache gstreamer
+      if: always() && steps.cache-gstreamer.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.cache-gstreamer.outputs.cache-primary-key }}
+        path: C:\Program Files\gstreamer
