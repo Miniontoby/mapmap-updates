@@ -55,9 +55,14 @@ jobs:
         GST_PREFIX="$(brew --prefix gstreamer)"
         PKG_CONFIG_PATH="${GST_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
         echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
+        echo "GST_PREFIX=${GST_PREFIX}" >> $GITHUB_ENV
 
     - name: qmake
-      run: qmake .
+      run: |
+        GST_INCLUDE="$(brew --prefix gstreamer)/include/gstreamer-1.0"
+        GLIB_INCLUDE="$(brew --prefix glib)/include/glib-2.0"
+        GLIB_CONFIG="$(brew --prefix glib)/lib/glib-2.0/include"
+        qmake . "INCLUDEPATH+=${GST_INCLUDE} ${GLIB_INCLUDE} ${GLIB_CONFIG}"
 
     - name: make
       run: make -j1
