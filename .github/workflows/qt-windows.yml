@@ -61,7 +61,7 @@ jobs:
         New-Item -ItemType Directory -Force -Path "MapMap\plugins"
         Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib\gstreamer-1.0\*.dll" -Destination "MapMap\plugins\" -Force
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v7
       with:
         name: windows-build
         path: MapMap/
