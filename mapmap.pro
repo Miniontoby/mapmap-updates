@@ -63,6 +63,7 @@ win32 {
     INCLUDEPATH += $$GSTREAMER_ROOT/include/glib-2.0
     INCLUDEPATH += $$GSTREAMER_ROOT/lib/glib-2.0/include
     LIBS += -L$$GSTREAMER_ROOT/lib -lgstreamer-1.0 -lglib-2.0 -lgobject-2.0
+    QMAKE_CXXFLAGS += /FI"windows.h"
 }
 
 CONFIG -= qtquickcompiler
