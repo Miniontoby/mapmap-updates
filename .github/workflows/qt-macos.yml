@@ -57,6 +57,9 @@ jobs:
         echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
         echo "GST_PREFIX=${GST_PREFIX}" >> $GITHUB_ENV
 
+    - name: Find gst.h
+      run: find /opt/homebrew -name "gst.h" 2>/dev/null
+      
     - name: qmake
       run: |
         GST_INCLUDE="$(brew --prefix gstreamer)/include/gstreamer-1.0"
