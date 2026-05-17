@@ -37,7 +37,6 @@ jobs:
       with:
         path: C:\Program Files\gstreamer
         key: gstreamer-1.0-msvc-x86_64
-        save-always: true
     - name: Install GStreamer
       if: steps.cache-gstreamer.outputs.cache-hit != 'true'
       run: choco install gstreamer gstreamer-devel -y
@@ -47,6 +46,9 @@ jobs:
     - name: qmake
       run: qmake . -spec win32-msvc
 
+    - name: List GStreamer libs
+      run: ls "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib"
+      
     - name: make
       run: nmake
 
@@ -59,8 +61,14 @@ jobs:
     - uses: actions/upload-artifact@v7
       with:
         name: windows-build
-        path: mapmap*
-
+        path: mapmap*        
 
 #    - name: make distcheck
 #      run: make distcheck
+
+    - name: Always cache gstreamer
+      if: always() && steps.cache-gstreamer.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.cache-gstreamer.outputs.cache-primary-key }}
+        path: C:\Program Files\gstreamer
