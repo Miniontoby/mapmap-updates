@@ -483,7 +483,6 @@ void MeshTextureGraphicsItem::_buildCacheQuadItem(CacheQuadItem& item, const Qua
   if (stop)
   {
 	item.subQuads.append({inputQuad, outputQuad});
-    // item.subQuads.append( (CacheQuadMapping){ inputQuad, outputQuad } );
   }
   else // subdivide
   {
