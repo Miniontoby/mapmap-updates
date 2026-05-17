@@ -52,10 +52,19 @@ jobs:
     - name: make check
       run: nmake check
 
-    - uses: actions/upload-artifact@v7
+    - name: Deploy Qt
+      run: windeployqt --release MapMap/MapMap.exe
+
+    - name: Copy GStreamer DLLs
+      run: |
+        Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\bin\*.dll" -Destination "MapMap\" -Force
+        New-Item -ItemType Directory -Force -Path "MapMap\plugins"
+        Copy-Item "C:\Program Files\gstreamer\1.0\msvc_x86_64\lib\gstreamer-1.0\*.dll" -Destination "MapMap\plugins\" -Force
+
+    - uses: actions/upload-artifact@v4
       with:
-        name: windows-build
-        path: mapmap*
+        name: MapMap
+        path: MapMap/
 
 #    - name: make distcheck
 #      run: make distcheck
