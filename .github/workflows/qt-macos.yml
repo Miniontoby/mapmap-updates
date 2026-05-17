@@ -52,13 +52,8 @@ jobs:
 
     - name: Set environment
       run: |
-        GST_PREFIX="$(brew --prefix gstreamer)"
-        PKG_CONFIG_PATH="${GST_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+        PKG_CONFIG_PATH="$(find /opt/homebrew/Cellar/gstreamer -name '*.pc' | head -1 | xargs dirname):${PKG_CONFIG_PATH:-}"
         echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
-        echo "GST_PREFIX=${GST_PREFIX}" >> $GITHUB_ENV
-
-    - name: Find gst.h
-      run: find /opt/homebrew -name "gst.h" 2>/dev/null
 
     - name: qmake
       run: |
