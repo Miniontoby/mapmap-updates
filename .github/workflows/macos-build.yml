@@ -13,7 +13,23 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
+
+    - name: Cache Homebrew
+      id: cache-brew
+      uses: actions/cache/restore@v5
+      with:
+        path: |
+          ~/Library/Caches/Homebrew
+          /opt/homebrew/Cellar/pkg-config
+          /opt/homebrew/Cellar/gstreamer
+          /opt/homebrew/Cellar/gst-plugins-base
+          /opt/homebrew/Cellar/gst-plugins-good
+          /opt/homebrew/Cellar/gst-plugins-bad
+          /opt/homebrew/Cellar/gst-plugins-ugly
+          /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc
+        key: brew-gstreamer-${{ runner.os }}-v1
 
     - name: Install dependencies
       run: |
@@ -36,3 +52,24 @@ jobs:
         qmake6 tests.pro
         make -j$(sysctl -n hw.logicalcpu)
         QT_QPA_PLATFORM=offscreen make check
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: macos-build
+        path: MapMap
+
+    - name: Always cache brew
+      if: always() && steps.cache-brew.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.cache-brew.outputs.cache-primary-key }}
+        path: |
+          ~/Library/Caches/Homebrew
+          /opt/homebrew/Cellar/pkg-config
+          /opt/homebrew/Cellar/gstreamer
+          /opt/homebrew/Cellar/gst-plugins-base
+          /opt/homebrew/Cellar/gst-plugins-good
+          /opt/homebrew/Cellar/gst-plugins-bad
+          /opt/homebrew/Cellar/gst-plugins-ugly
+          /opt/homebrew/Cellar/gst-libav
+          /opt/homebrew/Cellar/orc

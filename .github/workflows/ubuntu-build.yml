@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install system dependencies
       run: |
@@ -40,3 +40,8 @@ jobs:
         qmake6 tests.pro
         make -j$(nproc)
         QT_QPA_PLATFORM=offscreen make check
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: linux-build
+        path: mapmap
