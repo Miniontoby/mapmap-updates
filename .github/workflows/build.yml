@@ -102,17 +102,11 @@ jobs:
       with:
         path: |
           ~/Library/Caches/Homebrew
-          /opt/homebrew/Cellar/pkg-config
-          /opt/homebrew/Cellar/gstreamer
-          /opt/homebrew/Cellar/gst-plugins-base
-          /opt/homebrew/Cellar/gst-plugins-good
-          /opt/homebrew/Cellar/gst-plugins-bad
-          /opt/homebrew/Cellar/gst-plugins-ugly
-          /opt/homebrew/Cellar/gst-libav
-          /opt/homebrew/Cellar/orc
-        key: brew-gstreamer-${{ runner.os }}-v1
+          /opt/homebrew/Cellar/qt
+        key: brew-${{ runner.os }}-v1
 
     - name: Install dependencies
+      if: steps.cache-brew.outputs.cache-hit != 'true'
       run: |
         brew install qt
 
@@ -137,7 +131,7 @@ jobs:
     - uses: actions/upload-artifact@v7
       with:
         name: MapMap-macos
-        path: MapMap/
+        path: MapMap.app/
 
     - name: Always cache brew
       if: always() && steps.cache-brew.outputs.cache-hit != 'true'
@@ -146,11 +140,4 @@ jobs:
         key: ${{ steps.cache-brew.outputs.cache-primary-key }}
         path: |
           ~/Library/Caches/Homebrew
-          /opt/homebrew/Cellar/pkg-config
-          /opt/homebrew/Cellar/gstreamer
-          /opt/homebrew/Cellar/gst-plugins-base
-          /opt/homebrew/Cellar/gst-plugins-good
-          /opt/homebrew/Cellar/gst-plugins-bad
-          /opt/homebrew/Cellar/gst-plugins-ugly
-          /opt/homebrew/Cellar/gst-libav
-          /opt/homebrew/Cellar/orc
+          /opt/homebrew/Cellar/qt
